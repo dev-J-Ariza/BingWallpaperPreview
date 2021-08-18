@@ -1,8 +1,8 @@
-import urllib
-
+from PIL import Image, ImageTk
 import requests
 import json
 import os
+import io
 
 URL = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx={cur}&n=1&mkt=zh-CN'
 BASE_URL = 'https://cn.bing.com'
@@ -23,6 +23,14 @@ def get_single_image(img_url, img_path):
     r = requests.get(img_url)
     with open(img_path, 'wb') as f:
         f.write(r.content)
+
+
+def get_single_tk_image(img_url):
+    image_bytes = requests.get(img_url).content
+    data_stream = io.BytesIO(image_bytes)
+    pil_image = Image.open(data_stream)
+    tk_image = ImageTk.PhotoImage(pil_image)
+    return tk_image
 
 
 def change_windows_terminal_background(config_path, img_path):
