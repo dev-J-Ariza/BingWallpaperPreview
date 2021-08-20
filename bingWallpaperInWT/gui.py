@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import endpoint
+from functools import lru_cache
 
 image_url = ''
 index = 0
@@ -21,7 +22,7 @@ def run_app():
     index = 0
     image_url = endpoint.get_single_image_url(index)
     # tk_image = ImageTk.PhotoImage(file='res/left_arrow.png')
-    canvas.create_image(400, 300, image=get_image())
+    canvas.create_image(400, 300, image=get_image(image_url))
 
     # button frame
     button_frame = tk.Frame(canvas)
@@ -39,9 +40,10 @@ def run_app():
     window.mainloop()
 
 
-def get_image():
+@lru_cache(maxsize=12, typed=False)
+def get_image(url):
     global tk_image
-    tk_image_stream = endpoint.get_single_image_stream(image_url)
+    tk_image_stream = endpoint.get_single_image_stream(url)
     pil_image = Image.open(tk_image_stream)
     resize_image = pil_image.resize((800, 600))
     tk_image = ImageTk.PhotoImage(resize_image)
@@ -53,8 +55,7 @@ def previous():
     if index < 7:
         index += 1
         image_url = endpoint.get_single_image_url(index)
-        tk_image = get_image()
-        canvas.create_image(400, 300, image=get_image())
+        canvas.create_image(400, 300, image=get_image(image_url))
 
 
 def after():
@@ -62,8 +63,7 @@ def after():
     if index > 0:
         index -= 1
         image_url = endpoint.get_single_image_url(index)
-        tk_image = get_image()
-        canvas.create_image(400, 300, image=get_image())
+        canvas.create_image(400, 300, image=get_image(image_url))
 
 
 def download():
