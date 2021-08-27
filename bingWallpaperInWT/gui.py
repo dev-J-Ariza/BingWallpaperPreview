@@ -1,7 +1,8 @@
+import os
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
-import endpoint
+from bingWallpaperInWT import endpoint
 from functools import lru_cache
 
 image_url = ''
@@ -32,13 +33,16 @@ def run_app():
     info_txt.bind('<Enter>', show_info)  # mouse in
     info_txt.bind('<Leave>', hide_info)  # mouse out
     info_txt.pack(side='left', fill='y')
-    left_arrow = tk.PhotoImage(file='res/left_arrow.png')
+    image_path = os.path.join(os.path.dirname(__file__), 'res', 'left_arrow.png')
+    left_arrow = tk.PhotoImage(file=image_path)
     left_btn = tk.Button(button_frame, image=left_arrow, width=40, height=20,
                          command=previous).pack(side='left', fill='both')
-    right_arrow = tk.PhotoImage(file='res/right_arrow.png')
+    image_path = os.path.join(os.path.dirname(__file__), 'res', 'right_arrow.png')
+    right_arrow = tk.PhotoImage(file=image_path)
     right_btn = tk.Button(button_frame, image=right_arrow, width=40, height=20,
                           command=after).pack(side='left', fill='both')
-    down_arrow = tk.PhotoImage(file='res/download.png')
+    image_path = os.path.join(os.path.dirname(__file__), 'res', 'download.png')
+    down_arrow = tk.PhotoImage(file=image_path)
     download_btn = tk.Button(button_frame, image=down_arrow, width=40, height=20,
                              command=download).pack(side='left', fill='both')
     button_frame.pack(side='bottom', anchor='e', padx=100, pady=30)
@@ -89,7 +93,3 @@ def download():
     tk_image_stream = endpoint.get_single_image_stream(image_url)
     pil_image = Image.open(tk_image_stream)
     pil_image.save(saving_path)
-
-
-if __name__ == '__main__':
-    run_app()
