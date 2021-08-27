@@ -9,13 +9,13 @@ SUFFIX = '_UHD.jpg'
 
 
 # https://www.cnblogs.com/soupig/p/9981397.html
-def get_single_image_url(index):
+def get_single_image_url_info(index):
     r = requests.get(URL.format(cur=index))
     response = json.loads(r.content.decode(encoding='utf-8'))
     if (not response) or (not response['images']) or (not response['images'][0]) or (
             not response['images'][0]['urlbase']):
         return None
-    return BASE_URL + response['images'][0]['urlbase'] + SUFFIX
+    return BASE_URL + response['images'][0]['urlbase'] + SUFFIX,  response['images'][0]['copyright']
 
 
 def get_single_image(img_url, img_path):
@@ -43,10 +43,3 @@ def change_windows_terminal_background(config_path, img_path):
         f.write(json.dumps(config_data, ensure_ascii=False, indent=4))
 
 
-if __name__ == '__main__':
-    url = get_single_image_url(0)
-    path = os.path.join('D:\\', 'BingWallpaper', 'test.jpg')
-    get_single_image(url, path)
-    c_path = b'C'
-    print(c_path)
-    change_windows_terminal_background(c_path, path)
